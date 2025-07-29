@@ -6,7 +6,7 @@ app.use("/test", (req, res) => {
     res.send("This is a test route!");
 })
 
-app.get("/hello", (req, res) => {
+app.use("/hello", (req, res) => {
     res.send("Hello hello hello!");
 })
 
