@@ -2,17 +2,20 @@ const express = require('express');
 const app = express();
 const port = 3000;
 
-app.use("/test", (req, res) => {
-    res.send("This is a test route!");
+app.get("/user", (req, res) => {
+    res.send({
+        name: "Ankur",
+        title: "Kushwaha"
+    })
 })
 
-app.use("/hello", (req, res) => {
-    res.send("Hello hello hello!");
+app.post("/user", (req, res) => {
+    res.send("sucessfully posted");
 })
 
-app.use("/", (req,res) => {
-    res.send("Hello, World!");
-});
+app.delete("/user", (req, res) => {
+    res.send("sucessfully deleted");
+})
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
