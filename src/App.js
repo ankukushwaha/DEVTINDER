@@ -2,19 +2,23 @@ const express = require('express');
 const app = express();
 const port = 3000;
 
-app.get("/user", (req, res) => {
+app.get(/ab+c/, (req, res) => {
     res.send({
         name: "Ankur",
         title: "Kushwaha"
     })
 })
 
-app.post("/user", (req, res) => {
+app.post("/ab*c", (req, res) => {
     res.send("sucessfully posted");
 })
 
-app.delete("/user", (req, res) => {
+app.delete(/ab?c/, (req, res) => {
     res.send("sucessfully deleted");
+})
+
+app.get(/.*fly$/, (req, res) => {
+    res.send("ends with fly");
 })
 
 app.listen(port, () => {
