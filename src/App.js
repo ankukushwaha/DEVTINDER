@@ -17,8 +17,8 @@ app.delete(/ab?c/, (req, res) => {
     res.send("sucessfully deleted");
 })
 
-app.get(/.*fly$/, (req, res) => {
-    console.log("Query params are: ", req.query);
+app.get("/user/:userID/:password", (req, res) => {
+    console.log("Query params are: ", req.params);
     res.send("ends with fly");
 })
 
