@@ -18,6 +18,7 @@ app.delete(/ab?c/, (req, res) => {
 })
 
 app.get(/.*fly$/, (req, res) => {
+    console.log("Query params are: ", req.query);
     res.send("ends with fly");
 })
 
