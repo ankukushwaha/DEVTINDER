@@ -1,20 +1,26 @@
 const express = require('express');
-const {auth, userAuth} = require('./middlewares/auth');
 const app = express();
 const port = 3000;
 
-app.get("/admin", auth, (req, res) => {
-    res.send("Welcome to the admin area");
-})
-
-app.get("/user/login", (req, res) => {
-    res.send("user logged in sucessfully");
-})
-
-app.use("/user", userAuth);
-
 app.get("/user", (req, res) => {
-    res.send("Welcome to the user area");
+   try{
+    throw new Error("This is an error");
+    res.send("User endpoint reached");
+   }
+   catch(err){
+       res.status(500).send({
+           error: err.message,
+       });
+   }
+})
+
+app.use("/", (err, req, res, next) => {
+    console.log("Error middleware triggered");
+    if(err){
+        res.status(500).send({
+            error: err.message, 
+        });
+    }
 })
 
 app.listen(port, () => {
