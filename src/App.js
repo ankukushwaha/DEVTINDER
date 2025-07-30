@@ -1,17 +1,21 @@
 const express = require('express');
+const {auth, userAuth} = require('./middlewares/auth');
 const app = express();
 const port = 3000;
 
-app.get("/user", [(req, res, next) => {
-    next();
-}, (req, res, next) => {
-    console.log("User endpoint accessed");
-    next();
-}])
+app.get("/admin", auth, (req, res) => {
+    res.send("Welcome to the admin area");
+})
+
+app.get("/user/login", (req, res) => {
+    res.send("user logged in sucessfully");
+})
+
+app.use("/user", userAuth);
 
 app.get("/user", (req, res) => {
-    res.send("User endpoint response");
-});
+    res.send("Welcome to the user area");
+})
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
