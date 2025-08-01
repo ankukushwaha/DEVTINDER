@@ -1,28 +1,33 @@
 const express = require('express');
+const connectToDB = require('./config/database');
+const userModel = require('./models/user');
 const app = express();
 const port = 3000;
 
-app.get("/user", (req, res) => {
-   try{
-    throw new Error("This is an error");
-    res.send("User endpoint reached");
-   }
-   catch(err){
-       res.status(500).send({
-           error: err.message,
-       });
-   }
-})
+app.post('/signup', async(req, res) => {
+    // const {firstName, lastName, email, password} = req.body;
 
-app.use("/", (err, req, res, next) => {
-    console.log("Error middleware triggered");
-    if(err){
-        res.status(500).send({
-            error: err.message, 
+    try{
+        const newUser = new userModel({
+            firstName: "Ankur",
+            lastName: "Kushwaha",
+            email: "ankur@gmail.com",
+            password: "ankur123@"
         });
+        await newUser.save();
+        res.status(201).send("User created successfully");
+    }
+    catch(err){
+        res.status(500).send("Error creating user: " + err.message);
     }
 })
 
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-});
+connectToDB().then(() => {
+    console.log('Connected to MongoDB');
+    app.listen(port, () => {
+        console.log(`Server is running on port ${port}`);
+    });
+})
+.catch((err) => {
+    console.error('Error connecting to MongoDb: ', err);
+})
