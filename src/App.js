@@ -73,7 +73,7 @@ app.patch("/user", async(req, res) => {
         if(!emailId){
             throw new error("email Id is required!");
         }
-        const user = await userModel.findOneAndUpdate({email: emailId}, data, {returnDocument:'after'});
+        const user = await userModel.findOneAndUpdate({email: emailId}, data, {runValidators: true});
         if(!user){
             return res.status(404).send("User not found!");
         }
