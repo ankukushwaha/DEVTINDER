@@ -68,12 +68,12 @@ app.delete("/user", async(req, res) => {
 
 app.patch("/user", async(req, res) => {
     try{
-        const userId = req.body.Id;
+        const emailId = req.body.email;
         const data = req.body;
-        if(!userId){
-            throw new error("User Id is required!");
+        if(!emailId){
+            throw new error("email Id is required!");
         }
-        const user = await userModel.findByIdAndUpdate(userId, data, {returnDocument:'after'});
+        const user = await userModel.findOneAndUpdate({email: emailId}, data, {returnDocument:'after'});
         if(!user){
             return res.status(404).send("User not found!");
         }
