@@ -28,7 +28,7 @@ app.get('/users', async(req, res) => {
         }
     }
     catch(err){
-        res.status(500).send("Error fetching users: ", err.message);
+        res.status(500).send("Error fetching users: "+ err.message);
     }
 });
 
@@ -44,6 +44,46 @@ app.get('/feed', async(req, res) => {
     }
     catch(err){
         res.status(500).send("Error fetching feed: " + err.message);
+    }
+})
+
+app.delete("/user", async(req, res) => {
+    try{
+        const userId = req.body.Id;
+        if(!userId){
+            throw new Error("User Id is required!");
+        }
+        const user = await userModel.findByIdAndDelete(userId);
+        if(!user){
+            return res.status(404).send("User not found!");
+        }
+        else{
+            res.status(200).send("User deleted successfully!");
+        }
+    }
+    catch(err){
+        res.status(500).send("Error deleting user: " + err.message);
+    }
+})
+
+app.patch("/user", async(req, res) => {
+    try{
+        const userId = req.body.Id;
+        const data = req.body;
+        if(!userId){
+            throw new error("User Id is required!");
+        }
+        const user = await userModel.findByIdAndUpdate(userId, data, {returnDocument:'after'});
+        if(!user){
+            return res.status(404).send("User not found!");
+        }
+        else{
+            console.log(user);
+            res.status(200).send("User updated successfully!");
+        }
+    }
+    catch(err){
+        res.status(500).send("Error updating user: " + err.message);
     }
 })
 
