@@ -48,7 +48,12 @@ const userSchema = new mongoose.Schema({
     },
     imageUrl:{
         type:String,
-        default: "https://www.w3schools.com/howto/img_avatar.png"
+        default: "https://www.w3schools.com/howto/img_avatar.png",
+        validate(val){
+            if(!validator.isURL(val)){
+                throw new Error("Invalid URL format: " + val);
+            }
+        }
     },
     skills:{
         type: [String],

@@ -66,14 +66,29 @@ app.delete("/user", async(req, res) => {
     }
 })
 
-app.patch("/user", async(req, res) => {
+app.patch("/user/:email", async(req, res) => {
     try{
-        const emailId = req.body.email;
+        const emailId = req.params.email;
         const data = req.body;
         if(!emailId){
             throw new error("email Id is required!");
         }
-        const user = await userModel.findOneAndUpdate({email: emailId}, data, {runValidators: true});
+
+        const allowedChange = ['password', 'age', 'gender', 'imageUrl', 'skills'];
+        const isAllowed = Object.keys(data).every((k) => {
+            return allowedChange.includes(k);
+        })
+
+        if(!isAllowed){
+            throw new Error("Invalid update fields!");
+        }
+
+        if(data?.skills.length > 10){
+            throw new Error("Skills can not be more than 10!");
+        }
+
+        const user = await userModel.findOneAndUpdate({email: emailId}, data, {returnDocument: 'after'},
+            {runValidators: true});
         if(!user){
             return res.status(404).send("User not found!");
         }
