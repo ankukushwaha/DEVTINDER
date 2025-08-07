@@ -5,8 +5,10 @@ const app = express();
 const port = 3000;
 const {validateSignup} = require('./utils/validation');
 const bcrypt = require('bcrypt');
+const cookieParser = require('cookie-parser');
 
 app.use(express.json());
+app.use(cookieParser())
 
 app.post('/signup', async(req, res) => {
     try{
@@ -41,10 +43,25 @@ app.post("/login", async(req, res) => {
             throw new Error("Invalid Credentials!");
         }
 
+        res.cookie("token" , "djerhfuhrfugfugrfghrf");
         res.status(200).send("Login successfull!");
     }
     catch(err){
         res.status(500).send("Error Logging in: " + err.message);
+    }
+})
+
+
+app.get("/profile", (req, res) => {
+    try{
+        const token = req.cookies.token;
+        if(!token){
+            res.status(401).send("Unauthorized! Please login.");
+        }
+        res.send(token);
+    }
+    catch(err){
+        res.json(500).send("Error fetching data." + err.message);
     }
 })
 
