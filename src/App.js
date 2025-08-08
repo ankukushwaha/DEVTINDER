@@ -6,6 +6,7 @@ const port = 3000;
 const {validateSignup} = require('./utils/validation');
 const bcrypt = require('bcrypt');
 const cookieParser = require('cookie-parser');
+const jsonwebtoken = require('jsonwebtoken');
 
 app.use(express.json());
 app.use(cookieParser())
@@ -33,17 +34,14 @@ app.post('/signup', async(req, res) => {
 app.post("/login", async(req, res) => {
     try{
         const {email, password} = req.body;
-        const validEmail = await userModel.findOne({email: email});
-        if(!validEmail || validEmail.length === 0){
+        const user = await userModel.findOne({email: email});
+        if(!user || user.length === 0){
             throw new Error("Invalid Credentials!");
         }
 
-        const validPassword = await bcrypt.compare(password, validEmail.password);
-        if(!validPassword){
-            throw new Error("Invalid Credentials!");
-        }
-
-        res.cookie("token" , "djerhfuhrfugfugrfghrf");
+        await user.comparePassword(password);
+        const jwtToken = await user.getJWT();
+        res.cookie("token" , jwtToken, {expires: new Date(Date.now() + 3600000), httpOnly: true});
         res.status(200).send("Login successfull!");
     }
     catch(err){
@@ -58,7 +56,11 @@ app.get("/profile", (req, res) => {
         if(!token){
             res.status(401).send("Unauthorized! Please login.");
         }
-        res.send(token);
+        const user = jsonwebtoken.verify(token, "djerhfuhrfugfugrfghrf");
+        if(!user){
+            res.status(401).send("Unauthorized please login.");
+        }
+        res.send(user);
     }
     catch(err){
         res.json(500).send("Error fetching data." + err.message);

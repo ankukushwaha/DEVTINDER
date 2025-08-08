@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
     firstName:{
@@ -60,6 +62,28 @@ const userSchema = new mongoose.Schema({
         default:["JavaScript", "React", "Node.js"]
     }
 }, {timestamps: true});
+
+userSchema.methods.getJWT = async function(){
+    const token = await jwt.sign({email: this.email, id:this._id},
+        "djerhfuhrfugfugrfghrf", {expiresIn: "1h"});
+
+    if(!token){
+        throw new Error("Error generating JWT token!");
+    }
+
+    return token;
+}
+
+userSchema.methods.comparePassword = async function(passwordInputByUser){
+    if(!passwordInputByUser){
+        throw new Error("Password is required!");
+    }
+    const isMatch = await bcrypt.compare(passwordInputByUser, this.password);
+    if(!isMatch){
+        throw new Error("Invalid Credentials!");
+    }
+    return isMatch;
+}
 
 const userModel = mongoose.model('User', userSchema);
 module.exports = userModel;
