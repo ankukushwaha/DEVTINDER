@@ -1,4 +1,4 @@
-const validator = require('validator')
+const validator = require('validator');
 
 const validateSignup = (req) => {
     const {firstName, lastName, email, password} = req.body;
@@ -14,4 +14,23 @@ const validateSignup = (req) => {
     }
 }
 
-module.exports = {validateSignup};
+const validateProfileEdit = (req) => {
+    try{
+        const data = req.body;
+        const allowedChange = ['age', 'gender', 'imageUrl', 'skills'];
+        const isAllowed = Object.keys(data).every((field) => {
+            return allowedChange.includes(field);
+        })
+
+        if(!isAllowed){
+            throw new Error("Invalid update fields!");
+        }
+
+        return isAllowed;
+    }
+    catch(err){
+        console.log("Error in profile edit validation:", err.message);
+    }
+}
+
+module.exports = {validateSignup, validateProfileEdit};

@@ -1,19 +1,21 @@
-const auth = (req, res, next) => {
-    const token = "xyz";
-    const isValid = token === "xyz"; // Simulating token validation
-    if(!isValid){
-        res.status(401).send("Unauthorized");
+const jsonwebtoken = require('jsonwebtoken');
+
+const validateAuthorizedUser = (req,res,next) => {
+    try{
+        const token = req.cookies.token;
+        if(!token){
+            return res.status(401).send("Unauthorized! Please login.");
+        }
+        const user = jsonwebtoken.verify(token, "djerhfuhrfugfugrfghrf");
+        if(!user){
+            return res.status(401).send("Unauthorized please login.");
+        }
+        
+        req.user = user;
+        next();
+    } catch (err) {
+        return res.status(401).send("Invalid or expired token. Please login again.");
     }
-    next();
 }
 
-const userAuth = (req, res, next) => {
-    const token = "userTokenn";
-    const isValid = token === "userToken";
-    if(!isValid){
-        res.status(403).send("Forbidden");
-    }
-    next();
-};
-
-module.exports = {auth, userAuth};
+module.exports = {validateAuthorizedUser};
