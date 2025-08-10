@@ -6,6 +6,7 @@ const port = 3000;
 const cookieParser = require('cookie-parser');
 const authRouter = require('./routes/auth');
 const profileRouter = require('./routes/profile');
+require('dotenv').config();
 
 app.use(express.json());
 app.use(cookieParser())
