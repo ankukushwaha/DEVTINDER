@@ -1,11 +1,12 @@
 const express = require('express');
 const connectToDB = require('./config/database');
-const userModel = require('./models/user');
+const {userModel} = require('./models/user');
 const app = express();
 const port = 3000;
 const cookieParser = require('cookie-parser');
 const authRouter = require('./routes/auth');
 const profileRouter = require('./routes/profile');
+const requestRouter = require('./routes/request');
 require('dotenv').config();
 
 app.use(express.json());
@@ -13,6 +14,7 @@ app.use(cookieParser())
 
 app.use('/', authRouter);
 app.use('/', profileRouter);
+app.use('/', requestRouter);
 
 app.get('/feed', async(req, res) => {
     try{

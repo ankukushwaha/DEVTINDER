@@ -2,7 +2,7 @@ const express = require('express');
 const profileRouter = express.Router();
 const {validateAuthorizedUser, validateResetToken} = require('../middlewares/auth');
 const {validateProfileEdit} = require('../utils/validation');
-const userModel = require('../models/user');
+const {userModel} = require('../models/user');
 const jwt = require('jsonwebtoken');
 
 profileRouter.get("/profile/view", validateAuthorizedUser, (req, res) => {

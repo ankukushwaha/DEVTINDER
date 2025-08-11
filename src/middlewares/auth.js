@@ -1,7 +1,8 @@
 const jsonwebtoken = require('jsonwebtoken');
 const crypto = require('crypto');
+const { userModel } = require('../models/user');
 
-const validateAuthorizedUser = (req,res,next) => {
+const validateAuthorizedUser = async(req,res,next) => {
     try{
         const token = req.cookies.token;
         if(!token){
@@ -11,8 +12,13 @@ const validateAuthorizedUser = (req,res,next) => {
         if(!user){
             return res.status(401).send("Unauthorized please login.");
         }
-        
-        req.user = user;
+
+        const userInDB = await userModel.findById(user.id);
+        if(!userInDB){
+            return res.status(404).send("User not found!");
+        }
+
+        req.user = userInDB;
         next();
     } catch (err) {
         return res.status(401).send("Invalid or expired token. Please login again.");
