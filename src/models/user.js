@@ -66,25 +66,6 @@ const userSchema = new mongoose.Schema({
     }
 }, {timestamps: true});
 
-const connectionRequestSchema = new mongoose.Schema({
-    sender: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
-    },
-    receiver: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
-    },
-    status: {
-        type: String,
-        enum: ['pending', 'accepted', 'rejected', 'interested', 'ignored'],
-        default: 'pending'
-    }
-}, {timestamps: true});
-
-
 userSchema.methods.getJWT = function(){
     const token = jwt.sign({email: this.email, id:this._id},
         process.env.JWT_SECRET, {expiresIn: "1h"});
@@ -122,6 +103,5 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-const connectionModel = mongoose.model('ConnectionRequest', connectionRequestSchema);
 const userModel = mongoose.model('User', userSchema);
-module.exports = {userModel, connectionModel};
+module.exports = { userModel };
