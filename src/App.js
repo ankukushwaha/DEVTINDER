@@ -31,61 +31,6 @@ app.get('/feed', async(req, res) => {
     }
 })
 
-app.delete("/user", async(req, res) => {
-    try{
-        const userId = req.body.Id;
-        if(!userId){
-            throw new Error("User Id is required!");
-        }
-        const user = await userModel.findByIdAndDelete(userId);
-        if(!user){
-            return res.status(404).send("User not found!");
-        }
-        else{
-            res.status(200).send("User deleted successfully!");
-        }
-    }
-    catch(err){
-        res.status(500).send("Error deleting user: " + err.message);
-    }
-})
-
-app.patch("/user/:email", async(req, res) => {
-    try{
-        const emailId = req.params.email;
-        const data = req.body;
-        if(!emailId){
-            throw new error("email Id is required!");
-        }
-
-        const allowedChange = ['password', 'age', 'gender', 'imageUrl', 'skills'];
-        const isAllowed = Object.keys(data).every((k) => {
-            return allowedChange.includes(k);
-        })
-
-        if(!isAllowed){
-            throw new Error("Invalid update fields!");
-        }
-
-        if(data?.skills.length > 10){
-            throw new Error("Skills can not be more than 10!");
-        }
-
-        const user = await userModel.findOneAndUpdate({email: emailId}, data, {returnDocument: 'after'},
-            {runValidators: true});
-        if(!user){
-            return res.status(404).send("User not found!");
-        }
-        else{
-            console.log(user);
-            res.status(200).send("User updated successfully!");
-        }
-    }
-    catch(err){
-        res.status(500).send("Error updating user: " + err.message);
-    }
-})
-
 connectToDB().then(() => {
     console.log('Connected to MongoDB');
     app.listen(port, () => {
