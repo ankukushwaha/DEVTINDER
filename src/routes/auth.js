@@ -33,7 +33,13 @@ authRouter.post("/login", async(req, res) => {
 
         await user.comparePassword(password);
         const jwtToken = await user.getJWT();
-        res.cookie("token" , jwtToken, {expires: new Date(Date.now() + 3600000), httpOnly: true});
+        // res.cookie("token" , jwtToken, {expires: new Date(Date.now() + 3600000), httpOnly: true});
+        res.cookie("token", jwtToken, {
+            httpOnly: true,
+            secure: false,           // true only if using HTTPS (i.e. in prod)
+            sameSite: "Lax",         // or "None" if needed across sites
+            maxAge: 3600000          // 1 hour
+        });
         return res.status(200).send(user);
     }
     catch(err){
