@@ -63,6 +63,10 @@ const userSchema = new mongoose.Schema({
     skills:{
         type: [String],
         default:["JavaScript", "React", "Node.js"]
+    },
+    about: {
+        type: [String],
+        default: "Super Human"
     }
 }, {timestamps: true});
 

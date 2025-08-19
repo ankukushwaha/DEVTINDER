@@ -18,7 +18,10 @@ profileRouter.patch("/profile/edit", validateAuthorizedUser, async(req, res) => 
             return res.status(404).send("User not found!");
         }
         else{
-            return res.status(200).send("User updated successfully!");
+            return res.status(200).json({
+                message: "User updated successfully!",
+                data: user
+            });
         }
     }
     catch(err){
