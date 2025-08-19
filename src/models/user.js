@@ -42,10 +42,12 @@ const userSchema = new mongoose.Schema({
     resetPasswordExpire: Date,
     age:{
         type: Number,
+        default: 20,
         min: 10
     },
     gender:{
         type: String,
+        default: "Male",
         enum: {
             values: ['Male', 'Female', 'Other'],
             message: '{VALUE} is not a valid gender type!'
