@@ -19,7 +19,7 @@ userRouter.get("/user/request/received", validateAuthorizedUser, async(req, res)
         return res.status(200).json(data);
     }
     catch(err){
-        return res.status(500).send("Error fetching received requests: " + err.message);
+        return res.status(500).json({message: err.message});
     }
 });
 
@@ -48,7 +48,7 @@ userRouter.get("/user/connections", validateAuthorizedUser, async(req, res) => {
         return res.status(200).json(data);
     }
     catch(err){
-        return res.status(500).send("Error fetching connections: " + err.message);
+        return res.status(500).json({message: err.message});
     }
 });
 
@@ -85,7 +85,7 @@ userRouter.get("/user/feed", validateAuthorizedUser, async(req, res) => {
         
     }
     catch(err){
-        res.status(400).send("Error fetching feed: " + err.message);
+        res.status(400).json({message: err.message});
     }
 });
 

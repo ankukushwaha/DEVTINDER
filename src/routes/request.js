@@ -41,7 +41,7 @@ requestRouter.post("/request/send/:status/:toUserId", validateAuthorizedUser, as
         return res.status(201).json({message: `${req.user.firstName} is ${status} to ${isReceiverInDB.firstName} `}, data );
     }
     catch(err){
-        return res.status(500).send("Error sending request: " + err.message);
+        return res.status(500).json({message: err.message});
     }
 })
 
@@ -74,7 +74,7 @@ requestRouter.patch("/request/review/:status/:requestId", validateAuthorizedUser
         });
     }
     catch(err){
-        return res.status(500).send("Error reviewing connection requests: " + err.message);
+        return res.status(500).json({message: err.message});
     }
 })
 

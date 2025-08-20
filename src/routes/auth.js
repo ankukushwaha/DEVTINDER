@@ -19,7 +19,7 @@ authRouter.post('/signup', async(req, res) => {
         return res.status(201).send("User created successfully");
     }
     catch(err){
-        return res.status(500).send("Error creating user: " + err.message);
+        return res.status(500).json({message: err.message});
     }
 })
 
@@ -43,7 +43,7 @@ authRouter.post("/login", async(req, res) => {
         return res.status(200).send(user);
     }
     catch(err){
-        return res.status(500).send("Error Logging in: " + err.message);
+        return res.status(500).json({message: err.message});
     }
 })
 
@@ -53,7 +53,7 @@ authRouter.post("/logout", (req, res) => {
         return res.status(200).json({"message": "Logged out successfully!"});
     }
     catch(err){
-        return res.status(500).send("Error Logging out: ", + err.message);
+        return res.status(500).json({message: err.message});
     }
 })
 

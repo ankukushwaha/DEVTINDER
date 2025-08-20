@@ -25,7 +25,7 @@ profileRouter.patch("/profile/edit", validateAuthorizedUser, async(req, res) => 
         }
     }
     catch(err){
-        res.status(500).send("Error updating profile: " + err.message);
+        res.status(500).json({message: err.message});
     }
 })
 
@@ -46,7 +46,7 @@ profileRouter.patch('/profile/forgotPassword' , async(req, res) => {
         }
     }
     catch(err){
-        res.status(500).send("Error in forgot password: " + err.message);
+        res.status(500).json({message: err.message});
     }
 })
 
@@ -77,7 +77,7 @@ profileRouter.patch('/profile/resetPassword', validateResetToken, async(req, res
 
     res.json({ message: "Password reset successful" });
   } catch (err) {
-    res.status(401).json({"Error" : err.message,  message: "Invalid or expired token" });
+    res.status(401).json({message: err.message});
   }
 })
 
