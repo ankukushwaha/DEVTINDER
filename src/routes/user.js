@@ -4,7 +4,7 @@ const {validateAuthorizedUser} = require('../middlewares/auth');
 const {connectionModel} = require('../models/connectionRequest');
 const {userModel} = require('../models/user');
 
-const SAFE_INFO_TO_SHOW = ['firstName', 'lastName', 'age', 'imageUrl', 'skills'];
+const SAFE_INFO_TO_SHOW = ['firstName', 'lastName', 'age', 'imageUrl', 'skills', 'about', 'gender'];
 
 userRouter.get("/user/request/received", validateAuthorizedUser, async(req, res) => {
     try{
@@ -34,9 +34,9 @@ userRouter.get("/user/connections", validateAuthorizedUser, async(req, res) => {
         }).populate('sender', SAFE_INFO_TO_SHOW)
         .populate('receiver', SAFE_INFO_TO_SHOW);
 
-        if(!connections || connections.length === 0){
-            return res.status(404).send("No connections found!");
-        }
+        // if(!connections || connections.length === 0){
+        //     return res.status(404).json({message: "No connections found!"});
+        // }
 
         const data = connections.map((connection) => {
             if(connection.sender._id.toString() === userId.toString()){
