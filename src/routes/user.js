@@ -11,8 +11,8 @@ userRouter.get("/user/request/received", validateAuthorizedUser, async(req, res)
         const receiverUserId = req.user._id;
         const receivedRequests = await connectionModel.find({receiver: receiverUserId, status: "interested"})
         .populate('sender', SAFE_INFO_TO_SHOW);
-        if(!receivedRequests || receivedRequests.length === 0){
-            return res.status(404).send("No received requests found!");
+        if(!receivedRequests){
+            return res.status(400).send("Error in fetching requests!");
         }
 
         const data = receivedRequests.map((request) => request.sender);
