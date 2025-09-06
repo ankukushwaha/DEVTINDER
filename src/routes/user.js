@@ -4,13 +4,11 @@ const {validateAuthorizedUser} = require('../middlewares/auth');
 const {connectionModel} = require('../models/connectionRequest');
 const {userModel} = require('../models/user');
 
-const SAFE_INFO_TO_SHOW = ['firstName', 'lastName', 'age', 'imageUrl', 'skills', 'about', 'gender'];
-
 userRouter.get("/user/request/received", validateAuthorizedUser, async(req, res) => {
     try{
         const receiverUserId = req.user._id;
         const receivedRequests = await connectionModel.find({receiver: receiverUserId, status: "interested"})
-        .populate('sender', SAFE_INFO_TO_SHOW);
+        .populate('sender', JSON.parse(process.env.SAFE_INFO_TO_SHOW));
         if(!receivedRequests){
             return res.status(400).send("Error in fetching requests!");
         }
@@ -31,8 +29,8 @@ userRouter.get("/user/connections", validateAuthorizedUser, async(req, res) => {
                 {sender: userId, status: "accepted"}, 
                 {receiver: userId, status: "accepted"},
             ]
-        }).populate('sender', SAFE_INFO_TO_SHOW)
-        .populate('receiver', SAFE_INFO_TO_SHOW);
+        }).populate('sender', JSON.parse(process.env.SAFE_INFO_TO_SHOW))
+        .populate('receiver', JSON.parse(process.env.SAFE_INFO_TO_SHOW));
 
         // if(!connections || connections.length === 0){
         //     return res.status(404).json({message: "No connections found!"});
@@ -79,7 +77,7 @@ userRouter.get("/user/feed", validateAuthorizedUser, async(req, res) => {
                 {_id: {$ne: userId}}
             ]
         })
-        .select(SAFE_INFO_TO_SHOW).skip(skip).limit(limit);
+        .select(JSON.parse(process.env.SAFE_INFO_TO_SHOW)).skip(skip).limit(limit);
 
         res.status(200).json({"message": "Feed fetched successfully", "users": users});
         
